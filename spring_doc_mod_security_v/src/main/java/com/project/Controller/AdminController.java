@@ -50,7 +50,7 @@ public class AdminController {
 		 this.adminService.updateDoctor(doctorPrimary);
 		 return new ResponseEntity<>(HttpStatus.OK);
 	}
-	@GetMapping("/admin/patient")
+	@GetMapping("/admin/patientdata")
 	public ResponseEntity<List<PatientPrimary>> getAllPatient()
 	{
 		
@@ -65,7 +65,7 @@ public class AdminController {
 	}
 	
 	
-    @GetMapping("/admin/doctors")
+    @GetMapping("/admin/doctordata")
     public ResponseEntity<List<DoctorPrimary>> getUnverifiedDoctors()
     {
     	try

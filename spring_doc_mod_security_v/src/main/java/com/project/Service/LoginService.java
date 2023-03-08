@@ -17,7 +17,7 @@ import com.project.entity.proxy.LoginProxy;
 import com.project.userdetails.CustomUserDetails;
 
 @Service
-public class LoginService implements ILoginService,UserDetailsService {
+public class LoginService implements ILoginService {
 	
 	@Autowired
 	private DoctorPrimaryRepository doctorPrimaryRepository;
@@ -52,12 +52,12 @@ public class LoginService implements ILoginService,UserDetailsService {
 	}
 	
 
-	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		 DoctorPrimary doctor = doctorPrimaryRepository.findByemail(email);
-		 if(doctor == null)
-	     throw new UsernameNotFoundException("User Not found");
-		 
-		 return new CustomUserDetails(doctor);
-	}
+	/*
+	 * @Override public UserDetails loadUserByUsername(String email) throws
+	 * UsernameNotFoundException { DoctorPrimary doctor =
+	 * doctorPrimaryRepository.findByemail(email); if(doctor == null) throw new
+	 * UsernameNotFoundException("User Not found");
+	 * 
+	 * return new CustomUserDetails(doctor); }
+	 */
 }
