@@ -31,7 +31,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 		@UniqueConstraint(columnNames = "ADHAAR_CARD"), @UniqueConstraint(columnNames = "EMAIL"),
 		@UniqueConstraint(columnNames = "MEDICAL_REG_ID"), @UniqueConstraint(columnNames = "PAN_CARD"),
 		@UniqueConstraint(columnNames = "PHONE_NUMBER") })
-public class DoctorPrimary implements java.io.Serializable,UserDetails {
+public class DoctorPrimary implements java.io.Serializable {
 
 	private int doctorId;
 	private int address;
@@ -320,45 +320,15 @@ public class DoctorPrimary implements java.io.Serializable,UserDetails {
 	 */
 
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return Collections.singleton(new SimpleGrantedAuthority("User"));
+	public String toString() {
+		return "DoctorPrimary [doctorId=" + doctorId + ", address=" + address + ", doctorEstablishment="
+				+ doctorEstablishment + ", doctorMedRegistration=" + doctorMedRegistration + ", securityQuestions="
+				+ securityQuestions + ", securityQuestionsAnswer=" + securityQuestionsAnswer + ", fname=" + fname
+				+ ", lname=" + lname + ", email=" + email + ", pwd=" + pwd + ", phoneNumber=" + phoneNumber
+				+ ", gender=" + gender + ", panCard=" + panCard + ", adhaarCard=" + adhaarCard + ", specialization="
+				+ specialization + ", yearOfExperience=" + yearOfExperience + ", profileStatus=" + profileStatus
+				+ ", profilePhoto=" + profilePhoto + "]";
 	}
-
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return pwd;
-	}
-
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return email;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return true;
-	}
+	
 
 }

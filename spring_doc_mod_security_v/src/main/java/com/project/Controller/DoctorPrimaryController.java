@@ -15,6 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -37,7 +42,9 @@ import com.project.entity.DoctorPrimary;
 import com.project.entity.SecurityQuestions;
 import com.project.entity.proxy.DoctorPrimaryRegistrationProxy;
 import com.project.entity.proxy.LoginProxy;
+import com.project.entity.proxy.LoginResponseProxy;
 import com.project.exception.UniqueKeyExistException;
+import com.project.jwt.jwtUtil;
 import com.project.payload.FileResponse;
 @RestController
 public class DoctorPrimaryController {
@@ -74,6 +81,15 @@ public class DoctorPrimaryController {
 	
 	@Autowired
 	private ObjectCreationService objectCreationService;
+	
+	@Autowired
+	AuthenticationManager authenticationManager;
+	
+	@Autowired
+	jwtUtil jwtUtil;
+	
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	
 	@PostMapping("/doctor/register")
@@ -157,11 +173,12 @@ public class DoctorPrimaryController {
 		
 		catch(ConstraintViolationException e)
 		{
+			e.printStackTrace();
 			return new ResponseEntity<>(null,HttpStatus.CONFLICT);
 		}
 		catch (Exception e)
 		{
-			//transacation.rollback();
+			e.printStackTrace();
 			return new ResponseEntity<>(null,HttpStatus.CONFLICT);
 		}
 		
@@ -171,8 +188,29 @@ public class DoctorPrimaryController {
 	}
 
 	@PostMapping("/doctor/login")
-	public boolean validateLogin(@RequestBody LoginProxy proxy)
+	public ResponseEntity<?> validateLogin(@RequestBody LoginProxy proxy)
 	{
-		return this.loginService.ValidateDoctorLogin(proxy);
+		try
+		{
+		
+			DoctorPrimary doctor = loginService.ValidateDoctorLogin(proxy);
+			
+			//Authentication authentication = authenticationManager.authenticate(
+					//new UsernamePasswordAuthenticationToken(proxy.getEmail(),bCryptPasswordEncoder.encode(proxy.getPwd())));
+			
+			if(doctor == null)
+			throw new BadCredentialsException("Unauthorized User");
+			//DoctorPrimary doctor = (DoctorPrimary) authentication.getPrincipal();
+			
+			String accessToken = jwtUtil.generateAccessToken(doctor);
+			
+			LoginResponseProxy reponse = new LoginResponseProxy(doctor.getEmail(), accessToken);
+			
+			return ResponseEntity.ok().body(reponse);
+		}
+		catch (BadCredentialsException ex)
+		{
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
 	}
 }

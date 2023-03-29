@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.IService.ILoginService;
@@ -28,18 +29,20 @@ public class LoginService implements ILoginService {
 	@Autowired
 	private PasswordEncoderService passwordEncoderServie;
 	
-	public boolean ValidateDoctorLogin(LoginProxy proxy)
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	public DoctorPrimary ValidateDoctorLogin(LoginProxy proxy)
 	{
 		DoctorPrimary primary = this.doctorPrimaryRepository.findByemail(proxy.getEmail());
 		if(primary!= null)
 		{
-			if(primary.getPwd().equals(this.passwordEncoderServie.encodePassword(proxy.getPwd())))
-			return true;
-			else
-			return false;
+			if(primary.getPwd().equals(this.passwordEncoderServie.encodePassword(proxy.getPwd())));
+			return primary;
+			
 		}
-		else
-		return false;
+		
+		return null;
 		
 	}
 

@@ -57,7 +57,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 	private String getAccessToken(HttpServletRequest request)
 	{
 		String header = request.getHeader("Authorization");
-		String token = header.split(" ")[1].trim();
+		String token = header.split(" ")[0].trim();
 		return token;
 	}
 	
@@ -74,11 +74,11 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 	
 	private UserDetails getUSerDetails(String token)
 	{
-		DoctorPrimary primary = new DoctorPrimary();
+		DoctorDetails primary = new DoctorDetails();
 		String[] jwtSubject = jwtUtil.getSubject(token).split(",");
 		
-		primary.setDoctorId(Integer.parseInt(jwtSubject[0]));
-		primary.setEmail(jwtSubject[1]);
+		primary.setEmail(jwtSubject[0]);
+		primary.setPwd(jwtSubject[1]);
 		return primary;
 	}
 	

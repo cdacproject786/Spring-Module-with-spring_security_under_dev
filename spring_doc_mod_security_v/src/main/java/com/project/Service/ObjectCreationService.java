@@ -1,6 +1,7 @@
 package com.project.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.IService.IObjectCreationService;
@@ -16,7 +17,8 @@ public class ObjectCreationService implements IObjectCreationService {
 	@Autowired
 	private PasswordEncoderService passwordEncoderService;
 	
-	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 
 	
@@ -92,7 +94,7 @@ public class ObjectCreationService implements IObjectCreationService {
 		
 		//encrypting the password before setting it to the doctor object
 		String encryptedPassword = this.passwordEncoderService.encodePassword(proxy.getPwd());
-	
+				
 		docPrimary.setPwd(encryptedPassword); //the hashed password is set at this line
 		docPrimary.setSecurityQuestionsAnswer(proxy.getSecurityQuestionsAnswer());
 		docPrimary.setSpecialization(proxy.getSpecialization());
